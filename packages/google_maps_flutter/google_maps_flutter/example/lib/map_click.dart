@@ -6,14 +6,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'page.dart';
 
 const CameraPosition _kInitialPosition =
     CameraPosition(target: LatLng(-33.852, 151.211), zoom: 11.0);
 
 class MapClickPage extends GoogleMapExampleAppPage {
-  const MapClickPage({Key? key})
-      : super(const Icon(Icons.mouse), 'Map click', key: key);
+  const MapClickPage({Key? key}) : super(const Icon(Icons.mouse), 'Map click', key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,7 @@ class _MapClickBodyState extends State<_MapClickBody> {
   GoogleMapController? mapController;
   LatLng? _lastTap;
   LatLng? _lastLongPress;
+  PointOfInterest? _lastPoi;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,11 @@ class _MapClickBodyState extends State<_MapClickBody> {
       onLongPress: (LatLng pos) {
         setState(() {
           _lastLongPress = pos;
+        });
+      },
+      onPoiClick: (PointOfInterest poi) {
+        setState(() {
+          _lastPoi = poi;
         });
       },
     );
@@ -68,6 +74,7 @@ class _MapClickBodyState extends State<_MapClickBody> {
     if (mapController != null) {
       final String lastTap = 'Tap:\n${_lastTap ?? ""}\n';
       final String lastLongPress = 'Long press:\n${_lastLongPress ?? ""}';
+      final String lastPoi = 'Poi:\n${_lastPoi ?? ""}';
       columnChildren.add(Center(
           child: Text(
         lastTap,
@@ -86,6 +93,16 @@ class _MapClickBodyState extends State<_MapClickBody> {
       columnChildren.add(Center(
           child: Text(
         _lastLongPress != null ? 'Long pressed' : '',
+        textAlign: TextAlign.center,
+      )));
+      columnChildren.add(Center(
+          child: Text(
+        lastPoi,
+        textAlign: TextAlign.center,
+      )));
+      columnChildren.add(Center(
+          child: Text(
+        _lastPoi != null ? 'Poi clicked' : '',
         textAlign: TextAlign.center,
       )));
     }
